@@ -1,72 +1,248 @@
 package org.zackmac.jubiks;
 
-/**
- * A Jubiks cube will be a 3d array like this (numbers are filled in for the front and top faces):
- *
- *       /------------------------/
- *      / 4,0,0 / 4,0,1 / 4,0,2  /|
- *     /------------------------/ |
- *    / 4,1,0 / 4,1,1 / 4,1,2  / /|
- *   /------------------------/ / |
- *  / 4,2,0 / 4,2,1 / 4,2,2  / / /|
- * /------------------------/ / / |
- * | 0,0,0 | 0,0,1 | 0,0,2 | / / /
- * |-----------------------|/ / /
- * | 0,1,0 | 0,1,1 | 0,1,2 | / /
- * |-----------------------|/ /
- * | 0,2,0 | 0,2,1 | 0,2,2 | /
- * |-----------------------|/
- *
- * The faces (1st part of the 3d array) will be numbered 0 - 5 in this order: front, right, back, left, top, bottom
- * Each face row (2nd part of the 3d array) will be numbered 0 - 2 top to bottom
- * Each face column (3rd part of the 3d array) will be numbered 0 - 2 left to right
- *
- * Ultimately, we're tracking the color of each square - (r)ed, (b)lue, (o)range, (g)reen, (w)hite & (y)ellow
- */
+import java.util.Objects;
+import java.util.StringJoiner;
+
 public final class Cube {
-    public static final int NUM_SQUARES = 54;
 
-    private final char[][][] squares = new char[6][3][3];
+    private final Face front;
+    private final Face right;
+    private final Face back;
+    private final Face left;
+    private final Face top;
+    private final Face bottom;
 
-    public Cube(char[] colors) {
-        if ((colors == null) || (colors.length != NUM_SQUARES)) {
-            throw new IllegalArgumentException(
-                "54 colors should be passed in representing the initial layout of the rubiks cube.\n" +
-                "The colors should be supplied in the following face order: front, right, back, left, top & bottom.\n" +
-                "Each face square should be supplied top to bottom, left to right.\n"
-            );
-        }
-
-        int face = 0;
-        int row = 0;
-        int col = 0;
-
-        for (int x = 0; x < NUM_SQUARES; x++) {
-            char color = colors[x];
-
-            if ((color != 'r') && (color != 'b') && (color != 'o') && (color != 'g') && (color != 'w') && (color != 'y')) {
-                throw new IllegalArgumentException(
-                    "Only the following colors are allowed: (r)ed, (b)lue, (o)range, (g)reen, (w)hite & (y)ellow.\n" +
-                    "Please only supply the first character of each color.\n"
-                );
-            }
-
-            if ((x >= 9) && ((x % 9) == 0)) {
-                face++;
-                row = 0;
-                col = 0;
-            } else if ((x >= 3) && ((x % 3) == 0)) {
-                row++;
-                col = 0;
-            }
-
-            squares[face][row][col] = color;
-
-            col++;
-        }
+    public Cube(Face front, Face right, Face back, Face left, Face top, Face bottom) {
+        this.front = makeSureNotNull(front, "front");
+        this.right = makeSureNotNull(right, "right");
+        this.back = makeSureNotNull(back, "back");
+        this.left = makeSureNotNull(left, "left");
+        this.top = makeSureNotNull(top, "top");
+        this.bottom = makeSureNotNull(bottom, "bottom");
     }
 
-    public char[][][] getSquares() {
-        return squares;
+    private Face makeSureNotNull(Face face, String location) {
+        if (face == null) {
+            throw new IllegalArgumentException(location + " face must not be null");
+        }
+        return face;
+    }
+
+    public Cube(Cube oldCube) {
+        this.front = new Face(oldCube.front);
+        this.right = new Face(oldCube.right);
+        this.back = new Face(oldCube.back);
+        this.left = new Face(oldCube.left);
+        this.top = new Face(oldCube.top);
+        this.bottom = new Face(oldCube.bottom);
+    }
+
+    public void rotateFrontClockwise() {
+        Face oldFront = new Face(this.front);
+        Face oldRight = new Face(this.right);
+        Face oldLeft = new Face(this.left);
+        Face oldTop = new Face(this.top);
+        Face oldBottom = new Face(this.bottom);
+
+        front.setTopLeft(oldFront.getBottomLeft());
+        front.setTopMiddle(oldFront.getMiddleLeft());
+        front.setTopRight(oldFront.getTopLeft());
+        front.setMiddleLeft(oldFront.getBottomMiddle());
+        front.setMiddleRight(oldFront.getTopMiddle());
+        front.setBottomLeft(oldFront.getBottomRight());
+        front.setBottomMiddle(oldFront.getMiddleRight());
+        front.setBottomRight(oldFront.getTopRight());
+
+        right.setTopLeft(oldTop.getBottomLeft());
+        right.setMiddleLeft(oldTop.getBottomMiddle());
+        right.setBottomLeft(oldTop.getBottomRight());
+
+        left.setTopRight(oldBottom.getTopLeft());
+        left.setMiddleRight(oldBottom.getTopMiddle());
+        left.setBottomRight(oldBottom.getTopRight());
+
+        top.setBottomLeft(oldLeft.getBottomRight());
+        top.setBottomMiddle(oldLeft.getMiddleRight());
+        top.setBottomRight(oldLeft.getTopRight());
+
+        bottom.setTopLeft(oldRight.getBottomLeft());
+        bottom.setTopMiddle(oldRight.getMiddleLeft());
+        bottom.setTopRight(oldRight.getTopLeft());
+    }
+
+    public void rotateFrontCounterClockwise() {
+        Face oldFront = new Face(this.front);
+        Face oldRight = new Face(this.right);
+        Face oldLeft = new Face(this.left);
+        Face oldTop = new Face(this.top);
+        Face oldBottom = new Face(this.bottom);
+
+        front.setTopLeft(oldFront.getTopRight());
+        front.setTopMiddle(oldFront.getMiddleRight());
+        front.setTopRight(oldFront.getBottomRight());
+        front.setMiddleLeft(oldFront.getTopMiddle());
+        front.setMiddleRight(oldFront.getBottomMiddle());
+        front.setBottomLeft(oldFront.getTopLeft());
+        front.setBottomMiddle(oldFront.getMiddleLeft());
+        front.setBottomRight(oldFront.getBottomLeft());
+
+        right.setTopLeft(oldBottom.getTopRight());
+        right.setMiddleLeft(oldBottom.getTopMiddle());
+        right.setBottomLeft(oldBottom.getTopLeft());
+
+        left.setTopRight(oldTop.getBottomRight());
+        left.setMiddleRight(oldTop.getBottomMiddle());
+        left.setBottomRight(oldTop.getBottomLeft());
+
+        top.setBottomLeft(oldRight.getTopLeft());
+        top.setBottomMiddle(oldRight.getMiddleLeft());
+        top.setBottomRight(oldRight.getBottomLeft());
+
+        bottom.setTopLeft(oldLeft.getTopRight());
+        bottom.setTopMiddle(oldLeft.getMiddleRight());
+        bottom.setTopRight(oldLeft.getBottomRight());
+    }
+
+    public void rotateFrontFlip() {
+        Face oldFront = new Face(this.front);
+        Face oldRight = new Face(this.right);
+        Face oldLeft = new Face(this.left);
+        Face oldTop = new Face(this.top);
+        Face oldBottom = new Face(this.bottom);
+
+        front.setTopLeft(oldFront.getBottomRight());
+        front.setTopMiddle(oldFront.getBottomMiddle());
+        front.setTopRight(oldFront.getBottomLeft());
+        front.setMiddleLeft(oldFront.getMiddleRight());
+        front.setMiddleRight(oldFront.getMiddleLeft());
+        front.setBottomLeft(oldFront.getTopRight());
+        front.setBottomMiddle(oldFront.getTopMiddle());
+        front.setBottomRight(oldFront.getTopLeft());
+
+        right.setTopLeft(oldLeft.getBottomRight());
+        right.setMiddleLeft(oldLeft.getMiddleRight());
+        right.setBottomLeft(oldLeft.getTopRight());
+
+        left.setTopRight(oldRight.getBottomLeft());
+        left.setMiddleRight(oldRight.getMiddleLeft());
+        left.setBottomRight(oldRight.getTopLeft());
+
+        top.setBottomLeft(oldBottom.getTopRight());
+        top.setBottomMiddle(oldBottom.getTopMiddle());
+        top.setBottomRight(oldBottom.getTopLeft());
+
+        bottom.setTopLeft(oldTop.getBottomRight());
+        bottom.setTopMiddle(oldTop.getBottomMiddle());
+        bottom.setTopRight(oldTop.getBottomLeft());
+    }
+
+    public void rotateRightClockwise() {
+
+    }
+
+    public void rotateRightCounterClockwise() {
+
+    }
+
+    public void rotateRightFlip() {
+
+    }
+
+    public void rotateBackClockwise() {
+
+    }
+
+    public void rotateBackCounterClockwise() {
+
+    }
+
+    public void rotateBackFlip() {
+
+    }
+
+    public void rotateLeftClockwise() {
+
+    }
+
+    public void rotateLeftCounterClockwise() {
+
+    }
+
+    public void rotateLeftFlip() {
+
+    }
+
+    public void rotateTopClockwise() {
+
+    }
+
+    public void rotateTopCounterClockwise() {
+
+    }
+
+    public void rotateTopFlip() {
+
+    }
+
+    public void rotateBottomClockwise() {
+
+    }
+
+    public void rotateBottomCounterClockwise() {
+
+    }
+
+    public void rotateBottomFlip() {
+
+    }
+
+    public Face getFront() {
+        return front;
+    }
+
+    public Face getRight() {
+        return right;
+    }
+
+    public Face getBack() {
+        return back;
+    }
+
+    public Face getLeft() {
+        return left;
+    }
+
+    public Face getTop() {
+        return top;
+    }
+
+    public Face getBottom() {
+        return bottom;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cube cube = (Cube) o;
+        return front.equals(cube.front) && right.equals(cube.right) && back.equals(cube.back) &&
+                left.equals(cube.left) && top.equals(cube.top) && bottom.equals(cube.bottom);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(front, right, back, left, top, bottom);
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Cube.class.getSimpleName() + "[", "]")
+                .add("front=" + front)
+                .add("right=" + right)
+                .add("back=" + back)
+                .add("left=" + left)
+                .add("top=" + top)
+                .add("bottom=" + bottom)
+                .toString();
     }
 }
