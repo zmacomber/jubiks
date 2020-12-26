@@ -23,6 +23,24 @@ public class CubeTest {
     }
 
     @Test
+    public void testOldStaysOldAndNewStaysNew() {
+        Cube oldCube = new Cube(
+            new Face(WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE),
+            new Face(WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE),
+            new Face(WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE),
+            new Face(WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE),
+            new Face(WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE),
+            new Face(WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE)
+        );
+
+        Cube newCube = new Cube(oldCube);
+        newCube.getFront().setTopRight(GREEN);
+
+        assertEquals(oldCube.getFront().getTopRight(), WHITE);
+        assertEquals(newCube.getFront().getTopRight(), GREEN);
+    }
+
+    @Test
     public void shouldRotateFrontClockwise() {
         Cube expectedCube = new Cube(
             new Face(GREEN, WHITE, ORANGE, RED, GREEN, YELLOW, BLUE, RED, YELLOW),
@@ -66,6 +84,38 @@ public class CubeTest {
         );
 
         testCube.rotateFrontFlip();
+
+        checkFaces(expectedCube);
+    }
+
+    @Test
+    public void shouldRotateRightClockwise() {
+        Cube expectedCube = new Cube(
+            new Face(ORANGE, YELLOW, WHITE, WHITE, GREEN, WHITE, GREEN, RED, YELLOW),
+            new Face(RED, YELLOW, GREEN, GREEN, RED, WHITE, BLUE, WHITE, ORANGE),
+            new Face(ORANGE, ORANGE, BLUE, ORANGE, BLUE, GREEN, BLUE, BLUE, YELLOW),
+            new Face(RED, GREEN, WHITE, RED, ORANGE, BLUE, GREEN, GREEN, RED),
+            new Face(YELLOW, YELLOW, YELLOW, YELLOW, WHITE, RED, GREEN, BLUE, BLUE),
+            new Face(WHITE, BLUE, ORANGE, ORANGE, YELLOW, RED, RED, ORANGE, WHITE)
+        );
+
+        testCube.rotateRightClockwise();
+
+        checkFaces(expectedCube);
+    }
+
+    @Test
+    public void shouldRotateRightCounterClockwise() {
+        Cube expectedCube = new Cube(
+            new Face(ORANGE, YELLOW, BLUE, WHITE, GREEN, ORANGE, GREEN, RED, ORANGE),
+            new Face(ORANGE, WHITE, BLUE, WHITE, RED, GREEN, GREEN, YELLOW, RED),
+            new Face(YELLOW, ORANGE, BLUE, WHITE, BLUE, GREEN, WHITE, BLUE, YELLOW),
+            new Face(RED, GREEN, WHITE, RED, ORANGE, BLUE, GREEN, GREEN, RED),
+            new Face(YELLOW, YELLOW, ORANGE, YELLOW, WHITE, RED, GREEN, BLUE, WHITE),
+            new Face(WHITE, BLUE, YELLOW, ORANGE, YELLOW, RED, RED, ORANGE, BLUE)
+        );
+
+        testCube.rotateRightCounterClockwise();
 
         checkFaces(expectedCube);
     }
