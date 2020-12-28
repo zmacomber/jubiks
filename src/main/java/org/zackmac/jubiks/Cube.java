@@ -203,7 +203,36 @@ public final class Cube {
     }
 
     public void rotateRightFlip() {
+        Face oldRight = new Face(this.right);
+        Face oldBack = new Face(this.back);
+        Face oldFront = new Face(this.front);
+        Face oldTop = new Face(this.top);
+        Face oldBottom = new Face(this.bottom);
 
+        right.setTopLeft(oldRight.getBottomRight());
+        right.setTopMiddle(oldRight.getBottomMiddle());
+        right.setTopRight(oldRight.getBottomLeft());
+        right.setMiddleLeft(oldRight.getMiddleRight());
+        right.setMiddleRight(oldRight.getMiddleLeft());
+        right.setBottomLeft(oldRight.getTopRight());
+        right.setBottomMiddle(oldRight.getTopMiddle());
+        right.setBottomRight(oldRight.getTopLeft());
+
+        back.setTopLeft(oldFront.getBottomRight());
+        back.setMiddleLeft(oldFront.getMiddleRight());
+        back.setBottomLeft(oldFront.getTopRight());
+
+        front.setTopRight(oldBack.getBottomLeft());
+        front.setMiddleRight(oldBack.getMiddleLeft());
+        front.setBottomRight(oldBack.getTopLeft());
+
+        top.setBottomRight(oldBottom.getBottomRight());
+        top.setMiddleRight(oldBottom.getMiddleRight());
+        top.setTopRight(oldBottom.getTopRight());
+
+        bottom.setTopRight(oldTop.getTopRight());
+        bottom.setMiddleRight(oldTop.getMiddleRight());
+        bottom.setBottomRight(oldTop.getBottomRight());
     }
 
     public void rotateBackClockwise() {

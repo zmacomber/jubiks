@@ -120,6 +120,22 @@ public class CubeTest {
         checkFaces(expectedCube);
     }
 
+    @Test
+    public void shouldRotateRightFlip() {
+        Cube expectedCube = new Cube(
+            new Face(ORANGE, YELLOW, ORANGE, WHITE, GREEN, RED, GREEN, RED, WHITE),
+            new Face(BLUE, GREEN, RED, WHITE, RED, YELLOW, ORANGE, WHITE, GREEN),
+            new Face(BLUE, ORANGE, BLUE, RED, BLUE, GREEN, YELLOW, BLUE, YELLOW),
+            new Face(RED, GREEN, WHITE, RED, ORANGE, BLUE, GREEN, GREEN, RED),
+            new Face(YELLOW, YELLOW, WHITE, YELLOW, WHITE, WHITE, GREEN, BLUE, YELLOW),
+            new Face(WHITE, BLUE, BLUE, ORANGE, YELLOW, ORANGE, RED, ORANGE, ORANGE)
+        );
+
+        testCube.rotateRightFlip();
+
+        checkFaces(expectedCube);
+    }
+
     private void checkFaces(Cube expectedCube) {
         assertEquals(testCube.getFront(), expectedCube.getFront(), "Front faces don't equal");
         assertEquals(testCube.getRight(), expectedCube.getRight(), "Right faces don't equal");
