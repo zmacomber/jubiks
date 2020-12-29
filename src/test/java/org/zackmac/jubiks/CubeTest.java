@@ -184,6 +184,20 @@ public class CubeTest {
         checkFaces(expectedCube);
     }
 
+    @Test
+    public void shouldBeSolvedCube() {
+        assertTrue(
+            new Cube(
+                new Face(GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN),
+                new Face(RED, RED, RED, RED, RED, RED, RED, RED, RED),
+                new Face(BLUE, BLUE, BLUE, BLUE, BLUE, BLUE, BLUE, BLUE, BLUE),
+                new Face(ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE),
+                new Face(WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE),
+                new Face(YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW)
+            ).isSolved()
+        );
+    }
+
     private void checkFaces(Cube expectedCube) {
         assertEquals(testCube.getFront(), expectedCube.getFront(), "Front faces don't equal");
         assertEquals(testCube.getRight(), expectedCube.getRight(), "Right faces don't equal");
