@@ -233,6 +233,54 @@ public class CubeTest {
     }
 
     @Test
+    public void shouldRotateTopClockwise() {
+        Cube expectedCube = new Cube(
+            new Face(GREEN, WHITE, ORANGE, WHITE, GREEN, RED, GREEN, RED, BLUE),
+            new Face(WHITE, ORANGE, BLUE, YELLOW, RED, WHITE, RED, GREEN, BLUE),
+            new Face(RED, GREEN, WHITE, RED, BLUE, GREEN, ORANGE, BLUE, YELLOW),
+            new Face(ORANGE, YELLOW, YELLOW, RED, ORANGE, BLUE, GREEN, GREEN, RED),
+            new Face(GREEN, YELLOW, YELLOW, BLUE, WHITE, YELLOW, ORANGE, ORANGE, BLUE),
+            new Face(WHITE, BLUE, WHITE, ORANGE, YELLOW, WHITE, RED, ORANGE, YELLOW)
+        );
+
+        testCube.rotateTopClockwise();
+
+        checkFaces(expectedCube);
+    }
+
+    @Test
+    public void shouldRotateTopCounterClockwise() {
+        Cube expectedCube = new Cube(
+            new Face(RED, GREEN, WHITE, WHITE, GREEN, RED, GREEN, RED, BLUE),
+            new Face(ORANGE, YELLOW, YELLOW, YELLOW, RED, WHITE, RED, GREEN, BLUE),
+            new Face(GREEN, WHITE, ORANGE, RED, BLUE, GREEN, ORANGE, BLUE, YELLOW),
+            new Face(WHITE, ORANGE, BLUE, RED, ORANGE, BLUE, GREEN, GREEN, RED),
+            new Face(BLUE, ORANGE, ORANGE, YELLOW, WHITE, BLUE, YELLOW, YELLOW, GREEN),
+            new Face(WHITE, BLUE, WHITE, ORANGE, YELLOW, WHITE, RED, ORANGE, YELLOW)
+        );
+
+        testCube.rotateTopCounterClockwise();
+
+        checkFaces(expectedCube);
+    }
+
+    @Test
+    public void shouldRotateTopFlip() {
+        Cube expectedCube = new Cube(
+            new Face(WHITE, ORANGE, BLUE, WHITE, GREEN, RED, GREEN, RED, BLUE),
+            new Face(RED, GREEN, WHITE, YELLOW, RED, WHITE, RED, GREEN, BLUE),
+            new Face(ORANGE, YELLOW, YELLOW, RED, BLUE, GREEN, ORANGE, BLUE, YELLOW),
+            new Face(GREEN, WHITE, ORANGE, RED, ORANGE, BLUE, GREEN, GREEN, RED),
+            new Face(ORANGE, BLUE, GREEN, ORANGE, WHITE, YELLOW, BLUE, YELLOW, YELLOW),
+            new Face(WHITE, BLUE, WHITE, ORANGE, YELLOW, WHITE, RED, ORANGE, YELLOW)
+        );
+
+        testCube.rotateTopFlip();
+
+        checkFaces(expectedCube);
+    }
+
+    @Test
     public void shouldBeSolvedCube() {
         assertTrue(
             new Cube(
