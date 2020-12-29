@@ -370,6 +370,11 @@ public final class Cube {
 
     }
 
+    public boolean isSolved() {
+        return front.isOneColor() && right.isOneColor() && back.isOneColor() &&
+                left.isOneColor() && top.isOneColor() && bottom.isOneColor();
+    }
+
     public Face getFront() {
         return front;
     }

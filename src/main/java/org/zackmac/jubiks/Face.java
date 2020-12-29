@@ -117,6 +117,13 @@ public class Face {
         this.bottomRight = bottomRight;
     }
 
+    public boolean isOneColor() {
+        return topLeft.equals(center) && topMiddle.equals(center) && topRight.equals(center) &&
+                middleLeft.equals(center) && middleRight.equals(center) &&
+                bottomLeft.equals(center) && bottomMiddle.equals(center) && bottomRight.equals(center);
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
