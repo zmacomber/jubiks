@@ -11,7 +11,7 @@ public class Jubiks {
     // Based on online reading, it should take a max of 20 moves to solve any 3 x 3 x 3 rubiks cube
     static final byte MAX_MOVES_NEEDED_TO_SOLVE = 20;
 
-    static final long MAX_ATTEMPTS = 100000;
+    static final long MAX_ATTEMPTS = 1000000;
 
     static Logger logger = Logger.getGlobal();
 
@@ -37,13 +37,15 @@ public class Jubiks {
                 new Face(WHITE, BLUE, WHITE, ORANGE, YELLOW, WHITE, RED, ORANGE, YELLOW)
             );
 
-            for (int x = 0; x < MAX_MOVES_NEEDED_TO_SOLVE; x++) {
+            StringBuilder sb = new StringBuilder();
+
+            for (int x = 1; x <= MAX_MOVES_NEEDED_TO_SOLVE; x++) {
                 // Get a random face (0 - 5 which is front, right, back, left, top & bottom)
                 // and rotation (0 - 2 which is clockwise, counter clockwise or flip)
                 int randomFace = getRandomInt(5);
                 int randomRotation = getRandomInt(2);
 
-                if ((x > 0) && (randomFace == previousFace)) {
+                if ((x > 1) && (randomFace == previousFace)) {
                     while (randomFace == previousFace) {
                         randomFace = getRandomInt(5);
                     }
@@ -51,68 +53,67 @@ public class Jubiks {
 
                 previousFace = randomFace;
 
-                logger.log(Level.INFO, "Move {0}", x);
-
                 // Rotate using the chosen face and rotation
                 if ((randomFace == 0) && (randomRotation == 0)) {
-                    logger.info("rotateFrontClockwise");
+                    sb.append("FrontClockwise ");
                     cube.rotateFrontClockwise();
                 } else if ((randomFace == 0) && (randomRotation == 1)) {
-                    logger.info("rotateFrontCounterClockwise");
+                    sb.append("FrontCounterClockwise ");
                     cube.rotateFrontCounterClockwise();
                 } else if ((randomFace == 0) && (randomRotation == 2)) {
-                    logger.info("rotateFrontFlip");
+                    sb.append("FrontFlip ");
                     cube.rotateFrontFlip();
                 } else if ((randomFace == 1) && (randomRotation == 0)) {
-                    logger.info("rotateRightClockwise");
+                    sb.append("RightClockwise ");
                     cube.rotateRightClockwise();
                 } else if ((randomFace == 1) && (randomRotation == 1)) {
-                    logger.info("rotateRightCounterClockwise");
+                    sb.append("RightCounterClockwise ");
                     cube.rotateRightCounterClockwise();
                 } else if ((randomFace == 1) && (randomRotation == 2)) {
-                    logger.info("rotateRightFlip");
+                    sb.append("RightFlip ");
                     cube.rotateRightFlip();
                 } else if ((randomFace == 2) && (randomRotation == 0)) {
-                    logger.info("rotateBackClockwise");
+                    sb.append("BackClockwise ");
                     cube.rotateBackClockwise();
                 } else if ((randomFace == 2) && (randomRotation == 1)) {
-                    logger.info("rotateBackCounterClockwise");
+                    sb.append("BackCounterClockwise ");
                     cube.rotateBackCounterClockwise();
                 } else if ((randomFace == 2) && (randomRotation == 2)) {
-                    logger.info("rotateBackFlip");
+                    sb.append("BackFlip ");
                     cube.rotateBackFlip();
                 } else if ((randomFace == 3) && (randomRotation == 0)) {
-                    logger.info("rotateLeftClockwise");
+                    sb.append("LeftClockwise ");
                     cube.rotateLeftClockwise();
                 } else if ((randomFace == 3) && (randomRotation == 1)) {
-                    logger.info("rotateLeftCounterClockwise");
+                    sb.append("LeftCounterClockwise ");
                     cube.rotateLeftCounterClockwise();
                 } else if ((randomFace == 3) && (randomRotation == 2)) {
-                    logger.info("rotateLeftFlip");
+                    sb.append("LeftFlip ");
                     cube.rotateLeftFlip();
                 } else if ((randomFace == 4) && (randomRotation == 0)) {
-                    logger.info("rotateTopClockwise");
+                    sb.append("TopClockwise ");
                     cube.rotateTopClockwise();
                 } else if ((randomFace == 4) && (randomRotation == 1)) {
-                    logger.info("rotateTopCounterClockwise");
+                    sb.append("TopCounterClockwise ");
                     cube.rotateTopCounterClockwise();
                 } else if ((randomFace == 4) && (randomRotation == 2)) {
-                    logger.info("rotateTopFlip");
+                    sb.append("TopFlip ");
                     cube.rotateTopFlip();
                 } else if ((randomFace == 5) && (randomRotation == 0)) {
-                    logger.info("rotateBottomClockwise");
+                    sb.append("BottomClockwise ");
                     cube.rotateBottomClockwise();
                 } else if ((randomFace == 5) && (randomRotation == 1)) {
-                    logger.info("rotateBottomCounterClockwise");
+                    sb.append("BottomCounterClockwise ");
                     cube.rotateBottomCounterClockwise();
                 } else if ((randomFace == 5) && (randomRotation == 2)) {
-                    logger.info("rotateBottomFlip");
+                    sb.append("BottomFlip ");
                     cube.rotateBottomFlip();
                 }
 
                 // Have we solved this cube yet???
                 if (cube.isSolved()) {
-                    logger.log(Level.INFO, "Cube is solved in {0} attempts! Use moves and rotations directly above to solve!", attempts);
+                    logger.log(Level.INFO, "Cube is solved in {0} attempts!", attempts);
+                    logger.log(Level.INFO, "Use these rotations to solve: {0}", sb);
                 }
             }
         }
