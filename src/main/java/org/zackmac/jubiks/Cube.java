@@ -335,15 +335,102 @@ public final class Cube {
     }
 
     public void rotateLeftClockwise() {
+        Face oldLeft = new Face(this.left);
+        Face oldFront = new Face(this.front);
+        Face oldBack = new Face(this.back);
+        Face oldTop = new Face(this.top);
+        Face oldBottom = new Face(this.bottom);
 
+        left.setTopLeft(oldLeft.getBottomLeft());
+        left.setTopMiddle(oldLeft.getMiddleLeft());
+        left.setTopRight(oldLeft.getTopLeft());
+        left.setMiddleLeft(oldLeft.getBottomMiddle());
+        left.setMiddleRight(oldLeft.getTopMiddle());
+        left.setBottomLeft(oldLeft.getBottomRight());
+        left.setBottomMiddle(oldLeft.getMiddleRight());
+        left.setBottomRight(oldLeft.getTopRight());
+
+        front.setTopLeft(oldTop.getTopLeft());
+        front.setMiddleLeft(oldTop.getMiddleLeft());
+        front.setBottomLeft(oldTop.getBottomLeft());
+
+        back.setTopRight(oldBottom.getBottomLeft());
+        back.setMiddleRight(oldBottom.getMiddleLeft());
+        back.setBottomRight(oldBottom.getTopLeft());
+
+        top.setTopLeft(oldBack.getBottomRight());
+        top.setMiddleLeft(oldBack.getMiddleRight());
+        top.setBottomLeft(oldBack.getTopRight());
+
+        bottom.setTopLeft(oldFront.getTopLeft());
+        bottom.setMiddleLeft(oldFront.getMiddleLeft());
+        bottom.setBottomLeft(oldFront.getBottomLeft());
     }
 
     public void rotateLeftCounterClockwise() {
+        Face oldLeft = new Face(this.left);
+        Face oldFront = new Face(this.front);
+        Face oldBack = new Face(this.back);
+        Face oldTop = new Face(this.top);
+        Face oldBottom = new Face(this.bottom);
 
+        left.setTopLeft(oldLeft.getTopRight());
+        left.setTopMiddle(oldLeft.getMiddleRight());
+        left.setTopRight(oldLeft.getBottomRight());
+        left.setMiddleLeft(oldLeft.getTopMiddle());
+        left.setMiddleRight(oldLeft.getBottomMiddle());
+        left.setBottomLeft(oldLeft.getTopLeft());
+        left.setBottomMiddle(oldLeft.getMiddleLeft());
+        left.setBottomRight(oldLeft.getBottomLeft());
+
+        front.setTopLeft(oldBottom.getTopLeft());
+        front.setMiddleLeft(oldBottom.getMiddleLeft());
+        front.setBottomLeft(oldBottom.getBottomLeft());
+
+        back.setTopRight(oldTop.getBottomLeft());
+        back.setMiddleRight(oldTop.getMiddleLeft());
+        back.setBottomRight(oldTop.getTopLeft());
+
+        top.setTopLeft(oldFront.getTopLeft());
+        top.setMiddleLeft(oldFront.getMiddleLeft());
+        top.setBottomLeft(oldFront.getBottomLeft());
+
+        bottom.setTopLeft(oldBack.getBottomRight());
+        bottom.setMiddleLeft(oldBack.getMiddleRight());
+        bottom.setBottomLeft(oldBack.getTopRight());
     }
 
     public void rotateLeftFlip() {
+        Face oldLeft = new Face(this.left);
+        Face oldFront = new Face(this.front);
+        Face oldBack = new Face(this.back);
+        Face oldTop = new Face(this.top);
+        Face oldBottom = new Face(this.bottom);
 
+        left.setTopLeft(oldLeft.getBottomRight());
+        left.setTopMiddle(oldLeft.getBottomMiddle());
+        left.setTopRight(oldLeft.getBottomLeft());
+        left.setMiddleLeft(oldLeft.getMiddleRight());
+        left.setMiddleRight(oldLeft.getMiddleLeft());
+        left.setBottomLeft(oldLeft.getTopRight());
+        left.setBottomMiddle(oldLeft.getTopMiddle());
+        left.setBottomRight(oldLeft.getTopLeft());
+
+        front.setTopLeft(oldBack.getBottomRight());
+        front.setMiddleLeft(oldBack.getMiddleRight());
+        front.setBottomLeft(oldBack.getTopRight());
+
+        back.setTopRight(oldFront.getBottomLeft());
+        back.setMiddleRight(oldFront.getMiddleLeft());
+        back.setBottomRight(oldFront.getTopLeft());
+
+        top.setTopLeft(oldBottom.getTopLeft());
+        top.setMiddleLeft(oldBottom.getMiddleLeft());
+        top.setBottomLeft(oldBottom.getBottomLeft());
+
+        bottom.setTopLeft(oldTop.getTopLeft());
+        bottom.setMiddleLeft(oldTop.getMiddleLeft());
+        bottom.setBottomLeft(oldTop.getBottomLeft());
     }
 
     public void rotateTopClockwise() {
