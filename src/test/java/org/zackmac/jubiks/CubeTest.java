@@ -136,6 +136,54 @@ public class CubeTest {
         checkFaces(expectedCube);
     }
 
+    @Test
+    public void shouldRotateBackClockwise() {
+        Cube expectedCube = new Cube(
+            new Face(ORANGE, YELLOW, YELLOW, WHITE, GREEN, RED, GREEN, RED, BLUE),
+            new Face(GREEN, WHITE, YELLOW, YELLOW, RED, ORANGE, RED, GREEN, RED),
+            new Face(ORANGE, RED, WHITE, BLUE, BLUE, ORANGE, YELLOW, GREEN, BLUE),
+            new Face(BLUE, GREEN, WHITE, YELLOW, ORANGE, BLUE, YELLOW, GREEN, RED),
+            new Face(ORANGE, WHITE, BLUE, YELLOW, WHITE, ORANGE, GREEN, BLUE, ORANGE),
+            new Face(WHITE, BLUE, WHITE, ORANGE, YELLOW, WHITE, RED, RED, GREEN)
+        );
+
+        testCube.rotateBackClockwise();
+
+        checkFaces(expectedCube);
+    }
+
+    @Test
+    public void shouldRotateBackCounterClockwise() {
+        Cube expectedCube = new Cube(
+            new Face(ORANGE, YELLOW, YELLOW, WHITE, GREEN, RED, GREEN, RED, BLUE),
+            new Face(GREEN, WHITE, YELLOW, YELLOW, RED, YELLOW, RED, GREEN, BLUE),
+            new Face(BLUE, GREEN, YELLOW, ORANGE, BLUE, BLUE, WHITE, RED, ORANGE),
+            new Face(RED, GREEN, WHITE, ORANGE, ORANGE, BLUE, YELLOW, GREEN, RED),
+            new Face(GREEN, RED, RED, YELLOW, WHITE, ORANGE, GREEN, BLUE, ORANGE),
+            new Face(WHITE, BLUE, WHITE, ORANGE, YELLOW, WHITE, BLUE, WHITE, ORANGE)
+        );
+
+        testCube.rotateBackCounterClockwise();
+
+        checkFaces(expectedCube);
+    }
+
+    @Test
+    public void shouldRotateBackFlip() {
+        Cube expectedCube = new Cube(
+            new Face(ORANGE, YELLOW, YELLOW, WHITE, GREEN, RED, GREEN, RED, BLUE),
+            new Face(GREEN, WHITE, GREEN, YELLOW, RED, RED, RED, GREEN, RED),
+            new Face(YELLOW, BLUE, ORANGE, GREEN, BLUE, RED, BLUE, ORANGE, WHITE),
+            new Face(BLUE, GREEN, WHITE, WHITE, ORANGE, BLUE, ORANGE, GREEN, RED),
+            new Face(YELLOW, ORANGE, RED, YELLOW, WHITE, ORANGE, GREEN, BLUE, ORANGE),
+            new Face(WHITE, BLUE, WHITE, ORANGE, YELLOW, WHITE, BLUE, YELLOW, YELLOW)
+        );
+
+        testCube.rotateBackFlip();
+
+        checkFaces(expectedCube);
+    }
+
     private void checkFaces(Cube expectedCube) {
         assertEquals(testCube.getFront(), expectedCube.getFront(), "Front faces don't equal");
         assertEquals(testCube.getRight(), expectedCube.getRight(), "Right faces don't equal");
