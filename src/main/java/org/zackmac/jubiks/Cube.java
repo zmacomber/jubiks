@@ -1,18 +1,22 @@
 package org.zackmac.jubiks;
 
-import java.util.Objects;
+import java.util.Arrays;
 import java.util.StringJoiner;
+
+import static org.zackmac.jubiks.Color.*;
 
 public final class Cube {
 
-    private final Face front;
-    private final Face right;
-    private final Face back;
-    private final Face left;
-    private final Face top;
-    private final Face bottom;
+    private static final byte NUM_SQUARES = 9;
 
-    public Cube(Face front, Face right, Face back, Face left, Face top, Face bottom) {
+    private final byte[] front;
+    private final byte[] right;
+    private final byte[] back;
+    private final byte[] left;
+    private final byte[] top;
+    private final byte[] bottom;
+
+    public Cube(byte[] front, byte[] right, byte[] back, byte[] left, byte[] top, byte[] bottom) {
         this.front = makeSureNotNull(front, "front");
         this.right = makeSureNotNull(right, "right");
         this.back = makeSureNotNull(back, "back");
@@ -21,7 +25,7 @@ public final class Cube {
         this.bottom = makeSureNotNull(bottom, "bottom");
     }
 
-    private Face makeSureNotNull(Face face, String location) {
+    private byte[] makeSureNotNull(byte[] face, String location) {
         if (face == null) {
             throw new IllegalArgumentException(location + " face must not be null");
         }
@@ -29,634 +33,647 @@ public final class Cube {
     }
 
     public Cube(Cube oldCube) {
-        this.front = new Face(oldCube.front);
-        this.right = new Face(oldCube.right);
-        this.back = new Face(oldCube.back);
-        this.left = new Face(oldCube.left);
-        this.top = new Face(oldCube.top);
-        this.bottom = new Face(oldCube.bottom);
+        this.front = copy(oldCube.front);
+        this.right = copy(oldCube.right);
+        this.back = copy(oldCube.back);
+        this.left = copy(oldCube.left);
+        this.top = copy(oldCube.top);
+        this.bottom = copy(oldCube.bottom);
+    }
+
+    private byte[] copy(byte[] oldFace) {
+        byte[] newFace = new byte[NUM_SQUARES];
+        System.arraycopy(oldFace, 0, newFace, 0, NUM_SQUARES);
+        return newFace;
     }
 
     public void rotateFrontClockwise() {
-        Face oldFront = new Face(this.front);
-        Face oldRight = new Face(this.right);
-        Face oldLeft = new Face(this.left);
-        Face oldTop = new Face(this.top);
-        Face oldBottom = new Face(this.bottom);
+        byte[] oldFront = copy(this.front);
+        byte[] oldRight = copy(this.right);
+        byte[] oldLeft = copy(this.left);
+        byte[] oldTop = copy(this.top);
+        byte[] oldBottom = copy(this.bottom);
 
-        front.setTopLeft(oldFront.getBottomLeft());
-        front.setTopMiddle(oldFront.getMiddleLeft());
-        front.setTopRight(oldFront.getTopLeft());
-        front.setMiddleLeft(oldFront.getBottomMiddle());
-        front.setMiddleRight(oldFront.getTopMiddle());
-        front.setBottomLeft(oldFront.getBottomRight());
-        front.setBottomMiddle(oldFront.getMiddleRight());
-        front.setBottomRight(oldFront.getTopRight());
+        front[0] = oldFront[6];
+        front[1] = oldFront[3];
+        front[2] = oldFront[0];
+        front[3] = oldFront[7];
+        front[5] = oldFront[1];
+        front[6] = oldFront[8];
+        front[7] = oldFront[5];
+        front[8] = oldFront[2];
 
-        right.setTopLeft(oldTop.getBottomLeft());
-        right.setMiddleLeft(oldTop.getBottomMiddle());
-        right.setBottomLeft(oldTop.getBottomRight());
+        right[0] = oldTop[6];
+        right[3] = oldTop[7];
+        right[6] = oldTop[8];
 
-        left.setTopRight(oldBottom.getTopLeft());
-        left.setMiddleRight(oldBottom.getTopMiddle());
-        left.setBottomRight(oldBottom.getTopRight());
+        left[2] = oldBottom[0];
+        left[5] = oldBottom[1];
+        left[8] = oldBottom[2];
 
-        top.setBottomLeft(oldLeft.getBottomRight());
-        top.setBottomMiddle(oldLeft.getMiddleRight());
-        top.setBottomRight(oldLeft.getTopRight());
+        top[6] = oldLeft[8];
+        top[7] = oldLeft[5];
+        top[8] = oldLeft[2];
 
-        bottom.setTopLeft(oldRight.getBottomLeft());
-        bottom.setTopMiddle(oldRight.getMiddleLeft());
-        bottom.setTopRight(oldRight.getTopLeft());
+        bottom[0] = oldRight[6];
+        bottom[1] = oldRight[3];
+        bottom[2] = oldRight[0];
     }
 
     public void rotateFrontCounterClockwise() {
-        Face oldFront = new Face(this.front);
-        Face oldRight = new Face(this.right);
-        Face oldLeft = new Face(this.left);
-        Face oldTop = new Face(this.top);
-        Face oldBottom = new Face(this.bottom);
+        byte[] oldFront = copy(this.front);
+        byte[] oldRight = copy(this.right);
+        byte[] oldLeft = copy(this.left);
+        byte[] oldTop = copy(this.top);
+        byte[] oldBottom = copy(this.bottom);
 
-        front.setTopLeft(oldFront.getTopRight());
-        front.setTopMiddle(oldFront.getMiddleRight());
-        front.setTopRight(oldFront.getBottomRight());
-        front.setMiddleLeft(oldFront.getTopMiddle());
-        front.setMiddleRight(oldFront.getBottomMiddle());
-        front.setBottomLeft(oldFront.getTopLeft());
-        front.setBottomMiddle(oldFront.getMiddleLeft());
-        front.setBottomRight(oldFront.getBottomLeft());
+        front[0] = oldFront[2];
+        front[1] = oldFront[5];
+        front[2] = oldFront[8];
+        front[3] = oldFront[1];
+        front[5] = oldFront[7];
+        front[6] = oldFront[0];
+        front[7] = oldFront[3];
+        front[8] = oldFront[6];
 
-        right.setTopLeft(oldBottom.getTopRight());
-        right.setMiddleLeft(oldBottom.getTopMiddle());
-        right.setBottomLeft(oldBottom.getTopLeft());
+        right[0] = oldBottom[2];
+        right[3] = oldBottom[1];
+        right[6] = oldBottom[0];
 
-        left.setTopRight(oldTop.getBottomRight());
-        left.setMiddleRight(oldTop.getBottomMiddle());
-        left.setBottomRight(oldTop.getBottomLeft());
+        left[2] = oldTop[8];
+        left[5] = oldTop[7];
+        left[8] = oldTop[6];
 
-        top.setBottomLeft(oldRight.getTopLeft());
-        top.setBottomMiddle(oldRight.getMiddleLeft());
-        top.setBottomRight(oldRight.getBottomLeft());
+        top[6] = oldRight[0];
+        top[7] = oldRight[3];
+        top[8] = oldRight[6];
 
-        bottom.setTopLeft(oldLeft.getTopRight());
-        bottom.setTopMiddle(oldLeft.getMiddleRight());
-        bottom.setTopRight(oldLeft.getBottomRight());
+        bottom[0] = oldLeft[2];
+        bottom[1] = oldLeft[5];
+        bottom[2] = oldLeft[8];
     }
 
     public void rotateFrontFlip() {
-        Face oldFront = new Face(this.front);
-        Face oldRight = new Face(this.right);
-        Face oldLeft = new Face(this.left);
-        Face oldTop = new Face(this.top);
-        Face oldBottom = new Face(this.bottom);
+        byte[] oldFront = copy(this.front);
+        byte[] oldRight = copy(this.right);
+        byte[] oldLeft = copy(this.left);
+        byte[] oldTop = copy(this.top);
+        byte[] oldBottom = copy(this.bottom);
 
-        front.setTopLeft(oldFront.getBottomRight());
-        front.setTopMiddle(oldFront.getBottomMiddle());
-        front.setTopRight(oldFront.getBottomLeft());
-        front.setMiddleLeft(oldFront.getMiddleRight());
-        front.setMiddleRight(oldFront.getMiddleLeft());
-        front.setBottomLeft(oldFront.getTopRight());
-        front.setBottomMiddle(oldFront.getTopMiddle());
-        front.setBottomRight(oldFront.getTopLeft());
+        front[0] = oldFront[8];
+        front[1] = oldFront[7];
+        front[2] = oldFront[6];
+        front[3] = oldFront[5];
+        front[5] = oldFront[3];
+        front[6] = oldFront[2];
+        front[7] = oldFront[1];
+        front[8] = oldFront[0];
 
-        right.setTopLeft(oldLeft.getBottomRight());
-        right.setMiddleLeft(oldLeft.getMiddleRight());
-        right.setBottomLeft(oldLeft.getTopRight());
+        right[0] = oldLeft[8];
+        right[3] = oldLeft[5];
+        right[6] = oldLeft[2];
 
-        left.setTopRight(oldRight.getBottomLeft());
-        left.setMiddleRight(oldRight.getMiddleLeft());
-        left.setBottomRight(oldRight.getTopLeft());
+        left[2] = oldRight[6];
+        left[5] = oldRight[3];
+        left[8] = oldRight[0];
 
-        top.setBottomLeft(oldBottom.getTopRight());
-        top.setBottomMiddle(oldBottom.getTopMiddle());
-        top.setBottomRight(oldBottom.getTopLeft());
+        top[6] = oldBottom[2];
+        top[7] = oldBottom[1];
+        top[8] = oldBottom[0];
 
-        bottom.setTopLeft(oldTop.getBottomRight());
-        bottom.setTopMiddle(oldTop.getBottomMiddle());
-        bottom.setTopRight(oldTop.getBottomLeft());
+        bottom[0] = oldTop[8];
+        bottom[1] = oldTop[7];
+        bottom[2] = oldTop[6];
     }
 
     public void rotateRightClockwise() {
-        Face oldRight = new Face(this.right);
-        Face oldBack = new Face(this.back);
-        Face oldFront = new Face(this.front);
-        Face oldTop = new Face(this.top);
-        Face oldBottom = new Face(this.bottom);
+        byte[] oldRight = copy(this.right);
+        byte[] oldBack = copy(this.back);
+        byte[] oldFront = copy(this.front);
+        byte[] oldTop = copy(this.top);
+        byte[] oldBottom = copy(this.bottom);
 
-        right.setTopLeft(oldRight.getBottomLeft());
-        right.setTopMiddle(oldRight.getMiddleLeft());
-        right.setTopRight(oldRight.getTopLeft());
-        right.setMiddleLeft(oldRight.getBottomMiddle());
-        right.setMiddleRight(oldRight.getTopMiddle());
-        right.setBottomLeft(oldRight.getBottomRight());
-        right.setBottomMiddle(oldRight.getMiddleRight());
-        right.setBottomRight(oldRight.getTopRight());
+        right[0] = oldRight[6];
+        right[1] = oldRight[3];
+        right[2] = oldRight[0];
+        right[3] = oldRight[7];
+        right[5] = oldRight[1];
+        right[6] = oldRight[8];
+        right[7] = oldRight[5];
+        right[8] = oldRight[2];
 
-        back.setTopLeft(oldTop.getBottomRight());
-        back.setMiddleLeft(oldTop.getMiddleRight());
-        back.setBottomLeft(oldTop.getTopRight());
+        back[0] = oldTop[8];
+        back[3] = oldTop[5];
+        back[6] = oldTop[2];
 
-        front.setTopRight(oldBottom.getTopRight());
-        front.setMiddleRight(oldBottom.getMiddleRight());
-        front.setBottomRight(oldBottom.getBottomRight());
+        front[2] = oldBottom[2];
+        front[5] = oldBottom[5];
+        front[8] = oldBottom[8];
 
-        top.setBottomRight(oldFront.getBottomRight());
-        top.setMiddleRight(oldFront.getMiddleRight());
-        top.setTopRight(oldFront.getTopRight());
+        top[8] = oldFront[8];
+        top[5] = oldFront[5];
+        top[2] = oldFront[2];
 
-        bottom.setTopRight(oldBack.getBottomLeft());
-        bottom.setMiddleRight(oldBack.getMiddleLeft());
-        bottom.setBottomRight(oldBack.getTopLeft());
+        bottom[2] = oldBack[6];
+        bottom[5] = oldBack[3];
+        bottom[8] = oldBack[0];
     }
 
     public void rotateRightCounterClockwise() {
-        Face oldRight = new Face(this.right);
-        Face oldBack = new Face(this.back);
-        Face oldFront = new Face(this.front);
-        Face oldTop = new Face(this.top);
-        Face oldBottom = new Face(this.bottom);
+        byte[] oldRight = copy(this.right);
+        byte[] oldBack = copy(this.back);
+        byte[] oldFront = copy(this.front);
+        byte[] oldTop = copy(this.top);
+        byte[] oldBottom = copy(this.bottom);
 
-        right.setTopLeft(oldRight.getTopRight());
-        right.setTopMiddle(oldRight.getMiddleRight());
-        right.setTopRight(oldRight.getBottomRight());
-        right.setMiddleLeft(oldRight.getTopMiddle());
-        right.setMiddleRight(oldRight.getBottomMiddle());
-        right.setBottomLeft(oldRight.getTopLeft());
-        right.setBottomMiddle(oldRight.getMiddleLeft());
-        right.setBottomRight(oldRight.getBottomLeft());
+        right[0] = oldRight[2];
+        right[1] = oldRight[5];
+        right[2] = oldRight[8];
+        right[3] = oldRight[1];
+        right[5] = oldRight[7];
+        right[6] = oldRight[0];
+        right[7] = oldRight[3];
+        right[8] = oldRight[6];
 
-        back.setTopLeft(oldBottom.getBottomRight());
-        back.setMiddleLeft(oldBottom.getMiddleRight());
-        back.setBottomLeft(oldBottom.getTopRight());
+        back[0] = oldBottom[8];
+        back[3] = oldBottom[5];
+        back[6] = oldBottom[2];
 
-        front.setTopRight(oldTop.getTopRight());
-        front.setMiddleRight(oldTop.getMiddleRight());
-        front.setBottomRight(oldTop.getBottomRight());
+        front[2] = oldTop[2];
+        front[5] = oldTop[5];
+        front[8] = oldTop[8];
 
-        top.setBottomRight(oldBack.getTopLeft());
-        top.setMiddleRight(oldBack.getMiddleLeft());
-        top.setTopRight(oldBack.getBottomLeft());
+        top[8] = oldBack[0];
+        top[5] = oldBack[3];
+        top[2] = oldBack[6];
 
-        bottom.setTopRight(oldFront.getTopRight());
-        bottom.setMiddleRight(oldFront.getMiddleRight());
-        bottom.setBottomRight(oldFront.getBottomRight());
+        bottom[2] = oldFront[2];
+        bottom[5] = oldFront[5];
+        bottom[8] = oldFront[8];
     }
 
     public void rotateRightFlip() {
-        Face oldRight = new Face(this.right);
-        Face oldBack = new Face(this.back);
-        Face oldFront = new Face(this.front);
-        Face oldTop = new Face(this.top);
-        Face oldBottom = new Face(this.bottom);
+        byte[] oldRight = copy(this.right);
+        byte[] oldBack = copy(this.back);
+        byte[] oldFront = copy(this.front);
+        byte[] oldTop = copy(this.top);
+        byte[] oldBottom = copy(this.bottom);
 
-        right.setTopLeft(oldRight.getBottomRight());
-        right.setTopMiddle(oldRight.getBottomMiddle());
-        right.setTopRight(oldRight.getBottomLeft());
-        right.setMiddleLeft(oldRight.getMiddleRight());
-        right.setMiddleRight(oldRight.getMiddleLeft());
-        right.setBottomLeft(oldRight.getTopRight());
-        right.setBottomMiddle(oldRight.getTopMiddle());
-        right.setBottomRight(oldRight.getTopLeft());
+        right[0] = oldRight[8];
+        right[1] = oldRight[7];
+        right[2] = oldRight[6];
+        right[3] = oldRight[5];
+        right[5] = oldRight[3];
+        right[6] = oldRight[2];
+        right[7] = oldRight[1];
+        right[8] = oldRight[0];
 
-        back.setTopLeft(oldFront.getBottomRight());
-        back.setMiddleLeft(oldFront.getMiddleRight());
-        back.setBottomLeft(oldFront.getTopRight());
+        back[0] = oldFront[8];
+        back[3] = oldFront[5];
+        back[6] = oldFront[2];
 
-        front.setTopRight(oldBack.getBottomLeft());
-        front.setMiddleRight(oldBack.getMiddleLeft());
-        front.setBottomRight(oldBack.getTopLeft());
+        front[2] = oldBack[6];
+        front[5] = oldBack[3];
+        front[8] = oldBack[0];
 
-        top.setBottomRight(oldBottom.getBottomRight());
-        top.setMiddleRight(oldBottom.getMiddleRight());
-        top.setTopRight(oldBottom.getTopRight());
+        top[8] = oldBottom[8];
+        top[5] = oldBottom[5];
+        top[2] = oldBottom[2];
 
-        bottom.setTopRight(oldTop.getTopRight());
-        bottom.setMiddleRight(oldTop.getMiddleRight());
-        bottom.setBottomRight(oldTop.getBottomRight());
+        bottom[2] = oldTop[2];
+        bottom[5] = oldTop[5];
+        bottom[8] = oldTop[8];
     }
 
     public void rotateBackClockwise() {
-        Face oldBack = new Face(this.back);
-        Face oldLeft = new Face(this.left);
-        Face oldRight = new Face(this.right);
-        Face oldTop = new Face(this.top);
-        Face oldBottom = new Face(this.bottom);
+        byte[] oldBack = copy(this.back);
+        byte[] oldLeft = copy(this.left);
+        byte[] oldRight = copy(this.right);
+        byte[] oldTop = copy(this.top);
+        byte[] oldBottom = copy(this.bottom);
 
-        back.setTopLeft(oldBack.getBottomLeft());
-        back.setTopMiddle(oldBack.getMiddleLeft());
-        back.setTopRight(oldBack.getTopLeft());
-        back.setMiddleLeft(oldBack.getBottomMiddle());
-        back.setMiddleRight(oldBack.getTopMiddle());
-        back.setBottomLeft(oldBack.getBottomRight());
-        back.setBottomMiddle(oldBack.getMiddleRight());
-        back.setBottomRight(oldBack.getTopRight());
+        back[0] = oldBack[6];
+        back[1] = oldBack[3];
+        back[2] = oldBack[0];
+        back[3] = oldBack[7];
+        back[5] = oldBack[1];
+        back[6] = oldBack[8];
+        back[7] = oldBack[5];
+        back[8] = oldBack[2];
 
-        left.setTopLeft(oldTop.getTopRight());
-        left.setMiddleLeft(oldTop.getTopMiddle());
-        left.setBottomLeft(oldTop.getTopLeft());
+        left[0] = oldTop[2];
+        left[3] = oldTop[1];
+        left[6] = oldTop[0];
 
-        right.setTopRight(oldBottom.getBottomRight());
-        right.setMiddleRight(oldBottom.getBottomMiddle());
-        right.setBottomRight(oldBottom.getBottomLeft());
+        right[2] = oldBottom[8];
+        right[5] = oldBottom[7];
+        right[8] = oldBottom[6];
 
-        top.setTopLeft(oldRight.getTopRight());
-        top.setTopMiddle(oldRight.getMiddleRight());
-        top.setTopRight(oldRight.getBottomRight());
+        top[0] = oldRight[2];
+        top[1] = oldRight[5];
+        top[2] = oldRight[8];
 
-        bottom.setBottomLeft(oldLeft.getTopLeft());
-        bottom.setBottomMiddle(oldLeft.getMiddleLeft());
-        bottom.setBottomRight(oldLeft.getBottomLeft());
+        bottom[6] = oldLeft[0];
+        bottom[7] = oldLeft[3];
+        bottom[8] = oldLeft[6];
     }
 
     public void rotateBackCounterClockwise() {
-        Face oldBack = new Face(this.back);
-        Face oldLeft = new Face(this.left);
-        Face oldRight = new Face(this.right);
-        Face oldTop = new Face(this.top);
-        Face oldBottom = new Face(this.bottom);
+        byte[] oldBack = copy(this.back);
+        byte[] oldLeft = copy(this.left);
+        byte[] oldRight = copy(this.right);
+        byte[] oldTop = copy(this.top);
+        byte[] oldBottom = copy(this.bottom);
 
-        back.setTopLeft(oldBack.getTopRight());
-        back.setTopMiddle(oldBack.getMiddleRight());
-        back.setTopRight(oldBack.getBottomRight());
-        back.setMiddleLeft(oldBack.getTopMiddle());
-        back.setMiddleRight(oldBack.getBottomMiddle());
-        back.setBottomLeft(oldBack.getTopLeft());
-        back.setBottomMiddle(oldBack.getMiddleLeft());
-        back.setBottomRight(oldBack.getBottomLeft());
+        back[0] = oldBack[2];
+        back[1] = oldBack[5];
+        back[2] = oldBack[8];
+        back[3] = oldBack[1];
+        back[5] = oldBack[7];
+        back[6] = oldBack[0];
+        back[7] = oldBack[3];
+        back[8] = oldBack[6];
 
-        left.setTopLeft(oldBottom.getBottomLeft());
-        left.setMiddleLeft(oldBottom.getBottomMiddle());
-        left.setBottomLeft(oldBottom.getBottomRight());
+        left[0] = oldBottom[6];
+        left[3] = oldBottom[7];
+        left[6] = oldBottom[8];
 
-        right.setTopRight(oldTop.getTopLeft());
-        right.setMiddleRight(oldTop.getTopMiddle());
-        right.setBottomRight(oldTop.getTopRight());
+        right[2] = oldTop[0];
+        right[5] = oldTop[1];
+        right[8] = oldTop[2];
 
-        top.setTopLeft(oldLeft.getBottomLeft());
-        top.setTopMiddle(oldLeft.getMiddleLeft());
-        top.setTopRight(oldLeft.getTopLeft());
+        top[0] = oldLeft[6];
+        top[1] = oldLeft[3];
+        top[2] = oldLeft[0];
 
-        bottom.setBottomLeft(oldRight.getBottomRight());
-        bottom.setBottomMiddle(oldRight.getMiddleRight());
-        bottom.setBottomRight(oldRight.getTopRight());
+        bottom[6] = oldRight[8];
+        bottom[7] = oldRight[5];
+        bottom[8] = oldRight[2];
     }
 
     public void rotateBackFlip() {
-        Face oldBack = new Face(this.back);
-        Face oldLeft = new Face(this.left);
-        Face oldRight = new Face(this.right);
-        Face oldTop = new Face(this.top);
-        Face oldBottom = new Face(this.bottom);
+        byte[] oldBack = copy(this.back);
+        byte[] oldLeft = copy(this.left);
+        byte[] oldRight = copy(this.right);
+        byte[] oldTop = copy(this.top);
+        byte[] oldBottom = copy(this.bottom);
 
-        back.setTopLeft(oldBack.getBottomRight());
-        back.setTopMiddle(oldBack.getBottomMiddle());
-        back.setTopRight(oldBack.getBottomLeft());
-        back.setMiddleLeft(oldBack.getMiddleRight());
-        back.setMiddleRight(oldBack.getMiddleLeft());
-        back.setBottomLeft(oldBack.getTopRight());
-        back.setBottomMiddle(oldBack.getTopMiddle());
-        back.setBottomRight(oldBack.getTopLeft());
+        back[0] = oldBack[8];
+        back[1] = oldBack[7];
+        back[2] = oldBack[6];
+        back[3] = oldBack[5];
+        back[5] = oldBack[3];
+        back[6] = oldBack[2];
+        back[7] = oldBack[1];
+        back[8] = oldBack[0];
 
-        left.setTopLeft(oldRight.getBottomRight());
-        left.setMiddleLeft(oldRight.getMiddleRight());
-        left.setBottomLeft(oldRight.getTopRight());
+        left[0] = oldRight[8];
+        left[3] = oldRight[5];
+        left[6] = oldRight[2];
 
-        right.setTopRight(oldLeft.getBottomLeft());
-        right.setMiddleRight(oldLeft.getMiddleLeft());
-        right.setBottomRight(oldLeft.getTopLeft());
+        right[2] = oldLeft[6];
+        right[5] = oldLeft[3];
+        right[8] = oldLeft[0];
 
-        top.setTopLeft(oldBottom.getBottomRight());
-        top.setTopMiddle(oldBottom.getBottomMiddle());
-        top.setTopRight(oldBottom.getBottomLeft());
+        top[0] = oldBottom[8];
+        top[1] = oldBottom[7];
+        top[2] = oldBottom[6];
 
-        bottom.setBottomLeft(oldTop.getTopRight());
-        bottom.setBottomMiddle(oldTop.getTopMiddle());
-        bottom.setBottomRight(oldTop.getTopLeft());
+        bottom[6] = oldTop[2];
+        bottom[7] = oldTop[1];
+        bottom[8] = oldTop[0];
     }
 
     public void rotateLeftClockwise() {
-        Face oldLeft = new Face(this.left);
-        Face oldFront = new Face(this.front);
-        Face oldBack = new Face(this.back);
-        Face oldTop = new Face(this.top);
-        Face oldBottom = new Face(this.bottom);
+        byte[] oldLeft = copy(this.left);
+        byte[] oldFront = copy(this.front);
+        byte[] oldBack = copy(this.back);
+        byte[] oldTop = copy(this.top);
+        byte[] oldBottom = copy(this.bottom);
 
-        left.setTopLeft(oldLeft.getBottomLeft());
-        left.setTopMiddle(oldLeft.getMiddleLeft());
-        left.setTopRight(oldLeft.getTopLeft());
-        left.setMiddleLeft(oldLeft.getBottomMiddle());
-        left.setMiddleRight(oldLeft.getTopMiddle());
-        left.setBottomLeft(oldLeft.getBottomRight());
-        left.setBottomMiddle(oldLeft.getMiddleRight());
-        left.setBottomRight(oldLeft.getTopRight());
+        left[0] = oldLeft[6];
+        left[1] = oldLeft[3];
+        left[2] = oldLeft[0];
+        left[3] = oldLeft[7];
+        left[5] = oldLeft[1];
+        left[6] = oldLeft[8];
+        left[7] = oldLeft[5];
+        left[8] = oldLeft[2];
 
-        front.setTopLeft(oldTop.getTopLeft());
-        front.setMiddleLeft(oldTop.getMiddleLeft());
-        front.setBottomLeft(oldTop.getBottomLeft());
+        front[0] = oldTop[0];
+        front[3] = oldTop[3];
+        front[6] = oldTop[6];
 
-        back.setTopRight(oldBottom.getBottomLeft());
-        back.setMiddleRight(oldBottom.getMiddleLeft());
-        back.setBottomRight(oldBottom.getTopLeft());
+        back[2] = oldBottom[6];
+        back[5] = oldBottom[3];
+        back[8] = oldBottom[0];
 
-        top.setTopLeft(oldBack.getBottomRight());
-        top.setMiddleLeft(oldBack.getMiddleRight());
-        top.setBottomLeft(oldBack.getTopRight());
+        top[0] = oldBack[8];
+        top[3] = oldBack[5];
+        top[6] = oldBack[2];
 
-        bottom.setTopLeft(oldFront.getTopLeft());
-        bottom.setMiddleLeft(oldFront.getMiddleLeft());
-        bottom.setBottomLeft(oldFront.getBottomLeft());
+        bottom[0] = oldFront[0];
+        bottom[3] = oldFront[3];
+        bottom[6] = oldFront[6];
     }
 
     public void rotateLeftCounterClockwise() {
-        Face oldLeft = new Face(this.left);
-        Face oldFront = new Face(this.front);
-        Face oldBack = new Face(this.back);
-        Face oldTop = new Face(this.top);
-        Face oldBottom = new Face(this.bottom);
+        byte[] oldLeft = copy(this.left);
+        byte[] oldFront = copy(this.front);
+        byte[] oldBack = copy(this.back);
+        byte[] oldTop = copy(this.top);
+        byte[] oldBottom = copy(this.bottom);
 
-        left.setTopLeft(oldLeft.getTopRight());
-        left.setTopMiddle(oldLeft.getMiddleRight());
-        left.setTopRight(oldLeft.getBottomRight());
-        left.setMiddleLeft(oldLeft.getTopMiddle());
-        left.setMiddleRight(oldLeft.getBottomMiddle());
-        left.setBottomLeft(oldLeft.getTopLeft());
-        left.setBottomMiddle(oldLeft.getMiddleLeft());
-        left.setBottomRight(oldLeft.getBottomLeft());
+        left[0] = oldLeft[2];
+        left[1] = oldLeft[5];
+        left[2] = oldLeft[8];
+        left[3] = oldLeft[1];
+        left[5] = oldLeft[7];
+        left[6] = oldLeft[0];
+        left[7] = oldLeft[3];
+        left[8] = oldLeft[6];
 
-        front.setTopLeft(oldBottom.getTopLeft());
-        front.setMiddleLeft(oldBottom.getMiddleLeft());
-        front.setBottomLeft(oldBottom.getBottomLeft());
+        front[0] = oldBottom[0];
+        front[3] = oldBottom[3];
+        front[6] = oldBottom[6];
 
-        back.setTopRight(oldTop.getBottomLeft());
-        back.setMiddleRight(oldTop.getMiddleLeft());
-        back.setBottomRight(oldTop.getTopLeft());
+        back[2] = oldTop[6];
+        back[5] = oldTop[3];
+        back[8] = oldTop[0];
 
-        top.setTopLeft(oldFront.getTopLeft());
-        top.setMiddleLeft(oldFront.getMiddleLeft());
-        top.setBottomLeft(oldFront.getBottomLeft());
+        top[0] = oldFront[0];
+        top[3] = oldFront[3];
+        top[6] = oldFront[6];
 
-        bottom.setTopLeft(oldBack.getBottomRight());
-        bottom.setMiddleLeft(oldBack.getMiddleRight());
-        bottom.setBottomLeft(oldBack.getTopRight());
+        bottom[0] = oldBack[8];
+        bottom[3] = oldBack[5];
+        bottom[6] = oldBack[2];
     }
 
     public void rotateLeftFlip() {
-        Face oldLeft = new Face(this.left);
-        Face oldFront = new Face(this.front);
-        Face oldBack = new Face(this.back);
-        Face oldTop = new Face(this.top);
-        Face oldBottom = new Face(this.bottom);
+        byte[] oldLeft = copy(this.left);
+        byte[] oldFront = copy(this.front);
+        byte[] oldBack = copy(this.back);
+        byte[] oldTop = copy(this.top);
+        byte[] oldBottom = copy(this.bottom);
 
-        left.setTopLeft(oldLeft.getBottomRight());
-        left.setTopMiddle(oldLeft.getBottomMiddle());
-        left.setTopRight(oldLeft.getBottomLeft());
-        left.setMiddleLeft(oldLeft.getMiddleRight());
-        left.setMiddleRight(oldLeft.getMiddleLeft());
-        left.setBottomLeft(oldLeft.getTopRight());
-        left.setBottomMiddle(oldLeft.getTopMiddle());
-        left.setBottomRight(oldLeft.getTopLeft());
+        left[0] = oldLeft[8];
+        left[1] = oldLeft[7];
+        left[2] = oldLeft[6];
+        left[3] = oldLeft[5];
+        left[5] = oldLeft[3];
+        left[6] = oldLeft[2];
+        left[7] = oldLeft[1];
+        left[8] = oldLeft[0];
 
-        front.setTopLeft(oldBack.getBottomRight());
-        front.setMiddleLeft(oldBack.getMiddleRight());
-        front.setBottomLeft(oldBack.getTopRight());
+        front[0] = oldBack[8];
+        front[3] = oldBack[5];
+        front[6] = oldBack[2];
 
-        back.setTopRight(oldFront.getBottomLeft());
-        back.setMiddleRight(oldFront.getMiddleLeft());
-        back.setBottomRight(oldFront.getTopLeft());
+        back[2] = oldFront[6];
+        back[5] = oldFront[3];
+        back[8] = oldFront[0];
 
-        top.setTopLeft(oldBottom.getTopLeft());
-        top.setMiddleLeft(oldBottom.getMiddleLeft());
-        top.setBottomLeft(oldBottom.getBottomLeft());
+        top[0] = oldBottom[0];
+        top[3] = oldBottom[3];
+        top[6] = oldBottom[6];
 
-        bottom.setTopLeft(oldTop.getTopLeft());
-        bottom.setMiddleLeft(oldTop.getMiddleLeft());
-        bottom.setBottomLeft(oldTop.getBottomLeft());
+        bottom[0] = oldTop[0];
+        bottom[3] = oldTop[3];
+        bottom[6] = oldTop[6];
     }
 
     public void rotateTopClockwise() {
-        Face oldTop = new Face(this.top);
-        Face oldFront = new Face(this.front);
-        Face oldRight = new Face(this.right);
-        Face oldBack = new Face(this.back);
-        Face oldLeft = new Face(this.left);
+        byte[] oldTop = copy(this.top);
+        byte[] oldFront = copy(this.front);
+        byte[] oldRight = copy(this.right);
+        byte[] oldBack = copy(this.back);
+        byte[] oldLeft = copy(this.left);
 
-        top.setTopLeft(oldTop.getBottomLeft());
-        top.setTopMiddle(oldTop.getMiddleLeft());
-        top.setTopRight(oldTop.getTopLeft());
-        top.setMiddleLeft(oldTop.getBottomMiddle());
-        top.setMiddleRight(oldTop.getTopMiddle());
-        top.setBottomLeft(oldTop.getBottomRight());
-        top.setBottomMiddle(oldTop.getMiddleRight());
-        top.setBottomRight(oldTop.getTopRight());
+        top[0] = oldTop[6];
+        top[1] = oldTop[3];
+        top[2] = oldTop[0];
+        top[3] = oldTop[7];
+        top[5] = oldTop[1];
+        top[6] = oldTop[8];
+        top[7] = oldTop[5];
+        top[8] = oldTop[2];
 
-        front.setTopLeft(oldRight.getTopLeft());
-        front.setTopMiddle(oldRight.getTopMiddle());
-        front.setTopRight(oldRight.getTopRight());
+        front[0] = oldRight[0];
+        front[1] = oldRight[1];
+        front[2] = oldRight[2];
 
-        right.setTopLeft(oldBack.getTopLeft());
-        right.setTopMiddle(oldBack.getTopMiddle());
-        right.setTopRight(oldBack.getTopRight());
+        right[0] = oldBack[0];
+        right[1] = oldBack[1];
+        right[2] = oldBack[2];
 
-        back.setTopLeft(oldLeft.getTopLeft());
-        back.setTopMiddle(oldLeft.getTopMiddle());
-        back.setTopRight(oldLeft.getTopRight());
+        back[0] = oldLeft[0];
+        back[1] = oldLeft[1];
+        back[2] = oldLeft[2];
 
-        left.setTopLeft(oldFront.getTopLeft());
-        left.setTopMiddle(oldFront.getTopMiddle());
-        left.setTopRight(oldFront.getTopRight());
+        left[0] = oldFront[0];
+        left[1] = oldFront[1];
+        left[2] = oldFront[2];
     }
 
     public void rotateTopCounterClockwise() {
-        Face oldTop = new Face(this.top);
-        Face oldFront = new Face(this.front);
-        Face oldRight = new Face(this.right);
-        Face oldBack = new Face(this.back);
-        Face oldLeft = new Face(this.left);
+        byte[] oldTop = copy(this.top);
+        byte[] oldFront = copy(this.front);
+        byte[] oldRight = copy(this.right);
+        byte[] oldBack = copy(this.back);
+        byte[] oldLeft = copy(this.left);
 
-        top.setTopLeft(oldTop.getTopRight());
-        top.setTopMiddle(oldTop.getMiddleRight());
-        top.setTopRight(oldTop.getBottomRight());
-        top.setMiddleLeft(oldTop.getTopMiddle());
-        top.setMiddleRight(oldTop.getBottomMiddle());
-        top.setBottomLeft(oldTop.getTopLeft());
-        top.setBottomMiddle(oldTop.getMiddleLeft());
-        top.setBottomRight(oldTop.getBottomLeft());
+        top[0] = oldTop[2];
+        top[1] = oldTop[5];
+        top[2] = oldTop[8];
+        top[3] = oldTop[1];
+        top[5] = oldTop[7];
+        top[6] = oldTop[0];
+        top[7] = oldTop[3];
+        top[8] = oldTop[6];
 
-        front.setTopLeft(oldLeft.getTopLeft());
-        front.setTopMiddle(oldLeft.getTopMiddle());
-        front.setTopRight(oldLeft.getTopRight());
+        front[0] = oldLeft[0];
+        front[1] = oldLeft[1];
+        front[2] = oldLeft[2];
 
-        right.setTopLeft(oldFront.getTopLeft());
-        right.setTopMiddle(oldFront.getTopMiddle());
-        right.setTopRight(oldFront.getTopRight());
+        right[0] = oldFront[0];
+        right[1] = oldFront[1];
+        right[2] = oldFront[2];
 
-        back.setTopLeft(oldRight.getTopLeft());
-        back.setTopMiddle(oldRight.getTopMiddle());
-        back.setTopRight(oldRight.getTopRight());
+        back[0] = oldRight[0];
+        back[1] = oldRight[1];
+        back[2] = oldRight[2];
 
-        left.setTopLeft(oldBack.getTopLeft());
-        left.setTopMiddle(oldBack.getTopMiddle());
-        left.setTopRight(oldBack.getTopRight());
+        left[0] = oldBack[0];
+        left[1] = oldBack[1];
+        left[2] = oldBack[2];
     }
 
     public void rotateTopFlip() {
-        Face oldTop = new Face(this.top);
-        Face oldFront = new Face(this.front);
-        Face oldRight = new Face(this.right);
-        Face oldBack = new Face(this.back);
-        Face oldLeft = new Face(this.left);
+        byte[] oldTop = copy(this.top);
+        byte[] oldFront = copy(this.front);
+        byte[] oldRight = copy(this.right);
+        byte[] oldBack = copy(this.back);
+        byte[] oldLeft = copy(this.left);
 
-        top.setTopLeft(oldTop.getBottomRight());
-        top.setTopMiddle(oldTop.getBottomMiddle());
-        top.setTopRight(oldTop.getBottomLeft());
-        top.setMiddleLeft(oldTop.getMiddleRight());
-        top.setMiddleRight(oldTop.getMiddleLeft());
-        top.setBottomLeft(oldTop.getTopRight());
-        top.setBottomMiddle(oldTop.getTopMiddle());
-        top.setBottomRight(oldTop.getTopLeft());
+        top[0] = oldTop[8];
+        top[1] = oldTop[7];
+        top[2] = oldTop[6];
+        top[3] = oldTop[5];
+        top[5] = oldTop[3];
+        top[6] = oldTop[2];
+        top[7] = oldTop[1];
+        top[8] = oldTop[0];
 
-        front.setTopLeft(oldBack.getTopLeft());
-        front.setTopMiddle(oldBack.getTopMiddle());
-        front.setTopRight(oldBack.getTopRight());
+        front[0] = oldBack[0];
+        front[1] = oldBack[1];
+        front[2] = oldBack[2];
 
-        right.setTopLeft(oldLeft.getTopLeft());
-        right.setTopMiddle(oldLeft.getTopMiddle());
-        right.setTopRight(oldLeft.getTopRight());
+        right[0] = oldLeft[0];
+        right[1] = oldLeft[1];
+        right[2] = oldLeft[2];
 
-        back.setTopLeft(oldFront.getTopLeft());
-        back.setTopMiddle(oldFront.getTopMiddle());
-        back.setTopRight(oldFront.getTopRight());
+        back[0] = oldFront[0];
+        back[1] = oldFront[1];
+        back[2] = oldFront[2];
 
-        left.setTopLeft(oldRight.getTopLeft());
-        left.setTopMiddle(oldRight.getTopMiddle());
-        left.setTopRight(oldRight.getTopRight());
+        left[0] = oldRight[0];
+        left[1] = oldRight[1];
+        left[2] = oldRight[2];
     }
 
     public void rotateBottomClockwise() {
-        Face oldBottom = new Face(this.bottom);
-        Face oldFront = new Face(this.front);
-        Face oldRight = new Face(this.right);
-        Face oldBack = new Face(this.back);
-        Face oldLeft = new Face(this.left);
+        byte[] oldBottom = copy(this.bottom);
+        byte[] oldFront = copy(this.front);
+        byte[] oldRight = copy(this.right);
+        byte[] oldBack = copy(this.back);
+        byte[] oldLeft = copy(this.left);
 
-        bottom.setTopLeft(oldBottom.getBottomLeft());
-        bottom.setTopMiddle(oldBottom.getMiddleLeft());
-        bottom.setTopRight(oldBottom.getTopLeft());
-        bottom.setMiddleLeft(oldBottom.getBottomMiddle());
-        bottom.setMiddleRight(oldBottom.getTopMiddle());
-        bottom.setBottomLeft(oldBottom.getBottomRight());
-        bottom.setBottomMiddle(oldBottom.getMiddleRight());
-        bottom.setBottomRight(oldBottom.getTopRight());
+        bottom[0] = oldBottom[6];
+        bottom[1] = oldBottom[3];
+        bottom[2] = oldBottom[0];
+        bottom[3] = oldBottom[7];
+        bottom[5] = oldBottom[1];
+        bottom[6] = oldBottom[8];
+        bottom[7] = oldBottom[5];
+        bottom[8] = oldBottom[2];
 
-        front.setBottomLeft(oldLeft.getBottomLeft());
-        front.setBottomMiddle(oldLeft.getBottomMiddle());
-        front.setBottomRight(oldLeft.getBottomRight());
+        front[6] = oldLeft[6];
+        front[7] = oldLeft[7];
+        front[8] = oldLeft[8];
 
-        right.setBottomLeft(oldFront.getBottomLeft());
-        right.setBottomMiddle(oldFront.getBottomMiddle());
-        right.setBottomRight(oldFront.getBottomRight());
+        right[6] = oldFront[6];
+        right[7] = oldFront[7];
+        right[8] = oldFront[8];
 
-        back.setBottomLeft(oldRight.getBottomLeft());
-        back.setBottomMiddle(oldRight.getBottomMiddle());
-        back.setBottomRight(oldRight.getBottomRight());
+        back[6] = oldRight[6];
+        back[7] = oldRight[7];
+        back[8] = oldRight[8];
 
-        left.setBottomLeft(oldBack.getBottomLeft());
-        left.setBottomMiddle(oldBack.getBottomMiddle());
-        left.setBottomRight(oldBack.getBottomRight());
+        left[6] = oldBack[6];
+        left[7] = oldBack[7];
+        left[8] = oldBack[8];
     }
 
     public void rotateBottomCounterClockwise() {
-        Face oldBottom = new Face(this.bottom);
-        Face oldFront = new Face(this.front);
-        Face oldRight = new Face(this.right);
-        Face oldBack = new Face(this.back);
-        Face oldLeft = new Face(this.left);
+        byte[] oldBottom = copy(this.bottom);
+        byte[] oldFront = copy(this.front);
+        byte[] oldRight = copy(this.right);
+        byte[] oldBack = copy(this.back);
+        byte[] oldLeft = copy(this.left);
 
-        bottom.setTopLeft(oldBottom.getTopRight());
-        bottom.setTopMiddle(oldBottom.getMiddleRight());
-        bottom.setTopRight(oldBottom.getBottomRight());
-        bottom.setMiddleLeft(oldBottom.getTopMiddle());
-        bottom.setMiddleRight(oldBottom.getBottomMiddle());
-        bottom.setBottomLeft(oldBottom.getTopLeft());
-        bottom.setBottomMiddle(oldBottom.getMiddleLeft());
-        bottom.setBottomRight(oldBottom.getBottomLeft());
+        bottom[0] = oldBottom[2];
+        bottom[1] = oldBottom[5];
+        bottom[2] = oldBottom[8];
+        bottom[3] = oldBottom[1];
+        bottom[5] = oldBottom[7];
+        bottom[6] = oldBottom[0];
+        bottom[7] = oldBottom[3];
+        bottom[8] = oldBottom[6];
 
-        front.setBottomLeft(oldRight.getBottomLeft());
-        front.setBottomMiddle(oldRight.getBottomMiddle());
-        front.setBottomRight(oldRight.getBottomRight());
+        front[6] = oldRight[6];
+        front[7] = oldRight[7];
+        front[8] = oldRight[8];
 
-        right.setBottomLeft(oldBack.getBottomLeft());
-        right.setBottomMiddle(oldBack.getBottomMiddle());
-        right.setBottomRight(oldBack.getBottomRight());
+        right[6] = oldBack[6];
+        right[7] = oldBack[7];
+        right[8] = oldBack[8];
 
-        back.setBottomLeft(oldLeft.getBottomLeft());
-        back.setBottomMiddle(oldLeft.getBottomMiddle());
-        back.setBottomRight(oldLeft.getBottomRight());
+        back[6] = oldLeft[6];
+        back[7] = oldLeft[7];
+        back[8] = oldLeft[8];
 
-        left.setBottomLeft(oldFront.getBottomLeft());
-        left.setBottomMiddle(oldFront.getBottomMiddle());
-        left.setBottomRight(oldFront.getBottomRight());
+        left[6] = oldFront[6];
+        left[7] = oldFront[7];
+        left[8] = oldFront[8];
     }
 
     public void rotateBottomFlip() {
-        Face oldBottom = new Face(this.bottom);
-        Face oldFront = new Face(this.front);
-        Face oldRight = new Face(this.right);
-        Face oldBack = new Face(this.back);
-        Face oldLeft = new Face(this.left);
+        byte[] oldBottom = copy(this.bottom);
+        byte[] oldFront = copy(this.front);
+        byte[] oldRight = copy(this.right);
+        byte[] oldBack = copy(this.back);
+        byte[] oldLeft = copy(this.left);
 
-        bottom.setTopLeft(oldBottom.getBottomRight());
-        bottom.setTopMiddle(oldBottom.getBottomMiddle());
-        bottom.setTopRight(oldBottom.getBottomLeft());
-        bottom.setMiddleLeft(oldBottom.getMiddleRight());
-        bottom.setMiddleRight(oldBottom.getMiddleLeft());
-        bottom.setBottomLeft(oldBottom.getTopRight());
-        bottom.setBottomMiddle(oldBottom.getTopMiddle());
-        bottom.setBottomRight(oldBottom.getTopLeft());
+        bottom[0] = oldBottom[8];
+        bottom[1] = oldBottom[7];
+        bottom[2] = oldBottom[6];
+        bottom[3] = oldBottom[5];
+        bottom[5] = oldBottom[3];
+        bottom[6] = oldBottom[2];
+        bottom[7] = oldBottom[1];
+        bottom[8] = oldBottom[0];
 
-        front.setBottomLeft(oldBack.getBottomLeft());
-        front.setBottomMiddle(oldBack.getBottomMiddle());
-        front.setBottomRight(oldBack.getBottomRight());
+        front[6] = oldBack[6];
+        front[7] = oldBack[7];
+        front[8] = oldBack[8];
 
-        right.setBottomLeft(oldLeft.getBottomLeft());
-        right.setBottomMiddle(oldLeft.getBottomMiddle());
-        right.setBottomRight(oldLeft.getBottomRight());
+        right[6] = oldLeft[6];
+        right[7] = oldLeft[7];
+        right[8] = oldLeft[8];
 
-        back.setBottomLeft(oldFront.getBottomLeft());
-        back.setBottomMiddle(oldFront.getBottomMiddle());
-        back.setBottomRight(oldFront.getBottomRight());
+        back[6] = oldFront[6];
+        back[7] = oldFront[7];
+        back[8] = oldFront[8];
 
-        left.setBottomLeft(oldRight.getBottomLeft());
-        left.setBottomMiddle(oldRight.getBottomMiddle());
-        left.setBottomRight(oldRight.getBottomRight());
+        left[6] = oldRight[6];
+        left[7] = oldRight[7];
+        left[8] = oldRight[8];
     }
 
     public boolean isSolved() {
-        return front.isOneColor() && right.isOneColor() && back.isOneColor() &&
-                left.isOneColor() && top.isOneColor() && bottom.isOneColor();
+        for (byte x = 0; x < NUM_SQUARES; x++) {
+            if ((front[x] != GREEN) || (right[x] != RED) || (back[x] != BLUE) ||
+                (left[x] != ORANGE) || (top[x] != WHITE) || (bottom[x] != YELLOW)) {
+
+                return false;
+
+            }
+        }
+        return true;
     }
 
-    public Face getFront() {
+    public byte[] getFront() {
         return front;
     }
 
-    public Face getRight() {
+    public byte[] getRight() {
         return right;
     }
 
-    public Face getBack() {
+    public byte[] getBack() {
         return back;
     }
 
-    public Face getLeft() {
+    public byte[] getLeft() {
         return left;
     }
 
-    public Face getTop() {
+    public byte[] getTop() {
         return top;
     }
 
-    public Face getBottom() {
+    public byte[] getBottom() {
         return bottom;
     }
 
@@ -664,25 +681,31 @@ public final class Cube {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Cube cube = (Cube) o;
-        return front.equals(cube.front) && right.equals(cube.right) && back.equals(cube.back) &&
-                left.equals(cube.left) && top.equals(cube.top) && bottom.equals(cube.bottom);
+        Cube that = (Cube) o;
+        return Arrays.equals(front, that.front) && Arrays.equals(right, that.right) && Arrays.equals(back, that.back) &&
+                Arrays.equals(left, that.left) && Arrays.equals(top, that.top) && Arrays.equals(bottom, that.bottom);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(front, right, back, left, top, bottom);
+        int result = Arrays.hashCode(front);
+        result = 31 * result + Arrays.hashCode(right);
+        result = 31 * result + Arrays.hashCode(back);
+        result = 31 * result + Arrays.hashCode(left);
+        result = 31 * result + Arrays.hashCode(top);
+        result = 31 * result + Arrays.hashCode(bottom);
+        return result;
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", Cube.class.getSimpleName() + "[", "]")
-                .add("front=" + front)
-                .add("right=" + right)
-                .add("back=" + back)
-                .add("left=" + left)
-                .add("top=" + top)
-                .add("bottom=" + bottom)
+                .add("front=" + Arrays.toString(front))
+                .add("right=" + Arrays.toString(right))
+                .add("back=" + Arrays.toString(back))
+                .add("left=" + Arrays.toString(left))
+                .add("top=" + Arrays.toString(top))
+                .add("bottom=" + Arrays.toString(bottom))
                 .toString();
     }
 }
