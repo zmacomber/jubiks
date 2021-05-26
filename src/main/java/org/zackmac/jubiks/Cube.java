@@ -47,6 +47,129 @@ public final class Cube {
         return newFace;
     }
 
+    // By the end of this step, there should be 4 white edge pieces next to the yellow center square
+    public void createDaisy() {
+
+        // Make sure the bottom top edge has a white square
+        Edge edge = new Edge(this);
+        if ( ! edge.bottomTopContains(WHITE)) {
+            if (edge.frontLeftContains(WHITE)) {
+                rotateFrontCounterClockwise();
+            } else if (edge.frontTopContains(WHITE)) {
+                rotateFrontFlip();
+            } else if (edge.frontRightContains(WHITE)) {
+                rotateFrontClockwise();
+            } else if (edge.rightTopContains(WHITE)) {
+                rotateRightCounterClockwise();
+                rotateFrontClockwise();
+            } else if (edge.rightRightContains(WHITE)) {
+                rotateRightClockwise();
+                rotateBottomCounterClockwise();
+            } else if (edge.rightBottomContains(WHITE)) {
+                rotateBottomCounterClockwise();
+            } else if (edge.backTopContains(WHITE)) {
+                rotateTopFlip();
+                rotateFrontFlip();
+            } else if (edge.backRightContains(WHITE)) {
+                rotateBackCounterClockwise();
+                rotateTopFlip();
+                rotateFrontFlip();
+            } else if (edge.backBottomContains(WHITE)) {
+                rotateBottomFlip();
+            } else if (edge.leftTopContains(WHITE)) {
+                rotateLeftFlip();
+                rotateBottomClockwise();
+            } else if (edge.leftBottomContains(WHITE)) {
+                rotateBottomClockwise();
+            }
+        }
+
+        // Make sure the bottom right edge has a white square
+        edge = new Edge(this);
+        if ( ! edge.bottomRightContains(WHITE)) {
+            if (edge.frontLeftContains(WHITE)) {
+                rotateLeftFlip();
+                rotateBackFlip();
+                rotateRightClockwise();
+            } else if (edge.frontTopContains(WHITE)) {
+                rotateTopCounterClockwise();
+                rotateRightFlip();
+            } else if (edge.frontRightContains(WHITE)) {
+                rotateRightCounterClockwise();
+            } else if (edge.rightTopContains(WHITE)) {
+                rotateRightFlip();
+            } else if (edge.rightRightContains(WHITE)) {
+                rotateRightClockwise();
+            } else if (edge.backTopContains(WHITE)) {
+                rotateBackCounterClockwise();
+                rotateRightClockwise();
+            } else if (edge.backRightContains(WHITE)) {
+                rotateBackFlip();
+                rotateRightClockwise();
+            } else if (edge.backBottomContains(WHITE)) {
+                rotateBackClockwise();
+                rotateRightClockwise();
+            } else if (edge.leftTopContains(WHITE)) {
+                rotateLeftCounterClockwise();
+                rotateBackFlip();
+                rotateRightClockwise();
+            } else if (edge.leftBottomContains(WHITE)) {
+                rotateLeftClockwise();
+                rotateBackFlip();
+                rotateRightClockwise();
+            }
+        }
+
+        // Make sure the bottom bottom edge has a white square
+        edge = new Edge(this);
+        if ( ! edge.bottomBottomContains(WHITE)) {
+            if (edge.frontLeftContains(WHITE)) {
+                rotateLeftFlip();
+                rotateBackClockwise();
+            } else if (edge.frontTopContains(WHITE)) {
+                rotateTopFlip();
+                rotateBackFlip();
+            } else if (edge.frontRightContains(WHITE)) {
+                rotateRightCounterClockwise();
+                rotateBackCounterClockwise();
+            } else if (edge.rightTopContains(WHITE)) {
+                rotateTopCounterClockwise();
+                rotateBackFlip();
+            } else if (edge.rightRightContains(WHITE)) {
+                rotateBackCounterClockwise();
+            } else if (edge.backTopContains(WHITE)) {
+                rotateBackFlip();
+            } else if (edge.backRightContains(WHITE)) {
+                rotateBackClockwise();
+            } else if (edge.leftTopContains(WHITE)) {
+                rotateTopClockwise();
+                rotateBackFlip();
+            } else if (edge.leftBottomContains(WHITE)) {
+                rotateBottomClockwise();
+            }
+        }
+
+        // Make sure the bottom left edge has a white square
+        edge = new Edge(this);
+        if ( ! edge.bottomLeftContains(WHITE)) {
+            if (edge.frontLeftContains(WHITE)) {
+                rotateLeftClockwise();
+            } else if (edge.frontTopContains(WHITE)) {
+                rotateTopClockwise();
+                rotateLeftFlip();
+            } else if (edge.frontRightContains(WHITE)) {
+                rotateRightCounterClockwise();
+                rotateBackCounterClockwise();
+                rotateLeftCounterClockwise();
+            } else if (edge.rightTopContains(WHITE)) {
+                rotateTopFlip();
+                rotateLeftFlip();
+            } else if (edge.rightRightContains(WHITE)) {
+                rotateBackCounterClockwise();
+            }
+        }
+    }
+
     public void rotateFrontClockwise() {
         byte[] oldFront = copy(this.front);
         byte[] oldRight = copy(this.right);
